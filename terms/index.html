@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Read our terms of service and usage agreements.">
+  <title>Terms of Service - TransAI</title>
+
+  <!-- Google Fonts - Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Element Plus CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.5.3/dist/index.css">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'dark-primary': '#f1f5f9',
+            'dark-secondary': '#94a3b8',
+            'dark-muted': '#64748b',
+            'dark': '#1e293b',
+            'dark-bg': '#0f172a',
+            'bg-primary': '#0f172a',
+            'bg-secondary': '#1e293b',
+            'bg-tertiary': '#334155',
+            'accent-primary': '#3b82f6',
+            'accent-danger': '#ef4444',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom styles -->
+  <style>
+    :root {
+      /* Background colors */
+      --color-bg-primary: #0f172a;
+      --color-bg-secondary: #1e293b;
+      --color-bg-tertiary: #334155;
+      --color-bg-hover: #475569;
+
+      /* Text colors */
+      --color-text-primary: #f1f5f9;
+      --color-text-secondary: #94a3b8;
+      --color-text-muted: #64748b;
+
+      /* Accent colors */
+      --color-accent-primary: #3b82f6;
+      --color-accent-success: #22c55e;
+      --color-accent-warning: #f59e0b;
+      --color-accent-danger: #ef4444;
+
+      /* Border colors */
+      --color-border-default: #334155;
+      --color-border-light: #475569;
+      --color-border: #334155;
+    }
+
+    html, body {
+      background-color: #0f172a !important;
+      color: #f1f5f9;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1280px;
+    }
+
+    /* Dark theme overrides for Element Plus */
+    .el-card {
+      background-color: var(--color-bg-secondary) !important;
+      border-color: var(--color-border) !important;
+    }
+
+    .el-button--primary {
+      background-color: var(--color-accent-primary) !important;
+      border-color: var(--color-accent-primary) !important;
+    }
+
+    .el-switch.is-checked .el-switch__core {
+      background-color: var(--color-accent-primary) !important;
+      border-color: var(--color-accent-primary) !important;
+    }
+
+    /* Hero brand styles */
+    .hero-brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.875rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-brand-logo {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .hero-brand-name {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+
+    @media (max-width: 640px) {
+      .hero-brand-logo {
+        width: 45px;
+        height: 45px;
+      }
+      .hero-brand-name {
+        font-size: 1.875rem;
+      }
+    }
+
+    /* Dark card styles */
+    .dark-card {
+      background-color: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .dark-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Example card styles */
+    .example-card {
+      background-color: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .example-card:hover {
+      border-color: var(--color-accent-primary);
+    }
+
+    /* Testimonial card styles */
+    .testimonial-card {
+      background-color: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+    }
+
+    /* Upload dragger styles */
+    .upload-dragger {
+      background-color: var(--color-bg-tertiary);
+      border: 2px dashed var(--color-border-default);
+      border-radius: 8px;
+      padding: 2rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .upload-dragger:hover {
+      border-color: var(--color-accent-primary);
+    }
+
+    /* FAQ accordion styles */
+    .faq-item {
+      background-color: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      overflow: hidden;
+    }
+
+    .faq-item summary {
+      padding: 1rem;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-item summary::after {
+      content: '+';
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+    }
+
+    .faq-item[open] summary::after {
+      content: '−';
+    }
+
+    .faq-item .faq-answer {
+      padding: 0 1rem 1rem 1rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Navbar styles */
+    .nav-link {
+      color: var(--color-text-secondary);
+      transition: color 0.2s, border-color 0.2s, transform 0.2s ease;
+      padding-bottom: 4px;
+      border-bottom: 2px solid transparent;
+    }
+
+    .nav-link:hover {
+      color: var(--color-text-primary);
+      transform: scale(1.05);
+    }
+
+    .nav-link-active {
+      color: #3B82F6;
+      font-weight: 600;
+      border-bottom-color: #3B82F6;
+    }
+
+    /* Logo hover effects */
+    .logo-link {
+      transition: transform 0.2s ease;
+    }
+
+    .logo-link:hover {
+      transform: scale(1.05);
+    }
+
+    .logo-text {
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Footer brand name */
+    .footer-brand-name {
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Feature highlight icon filter */
+    .highlight-icon img {
+      filter: brightness(0) saturate(100%) invert(70%) sepia(98%) saturate(2645%) hue-rotate(195deg) brightness(103%) contrast(101%);
+    }
+  </style>
+</head>
+<body>
+
+
+<header class="navbar sticky top-0 z-50 bg-primary/95 backdrop-blur border-b border-dark" style="background-color: rgba(15, 23, 42, 0.95);">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center h-12">
+      <!-- Logo with icon and text -->
+      <a href="../index.html" class="flex items-center gap-2 logo-link">
+        <img src="../img/transai1.png" alt="TransAI" class="h-10 w-auto">
+        <span class="text-3xl font-semibold logo-text">TransAI</span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="../index.html" class="nav-link ">Home</a>
+        <a href="../pricing/index.html" class="nav-link ">Pricing</a>
+      </nav>
+
+      <!-- Auth Section -->
+      <div class="hidden md:flex items-center gap-4">
+        <a href="../index.html">
+          <button class="px-4 py-2 bg-accent-primary text-white rounded-md hover:opacity-90 transition-opacity">Get Started</button>
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button class="md:hidden p-2 text-dark-secondary hover:text-dark-primary" onclick="document.getElementById('mobileMenu').classList.toggle('hidden')">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden py-4 border-t border-dark">
+      <nav class="flex flex-col gap-4">
+        <a href="../index.html" class="nav-link ">Home</a>
+        <a href="../pricing/index.html" class="nav-link ">Pricing</a>
+        <a href="../index.html" class="mt-2">
+          <button class="px-4 py-2 bg-accent-primary text-white rounded-md hover:opacity-90 transition-opacity">Get Started</button>
+        </a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+
+<div class="legal-page">
+  <div class="container mx-auto px-4 py-12">
+    <h1 class="text-4xl font-bold text-dark-primary text-center mb-4">Terms of Service</h1>
+    <p class="text-sm text-dark-secondary text-center mb-12">Last updated: March 2026</p>
+
+    <div class="max-w-4xl mx-auto bg-secondary rounded-lg p-6 md:p-8 border border-dark">
+      <h3 class="text-lg font-semibold text-dark-primary mt-6 mb-3">1. Acceptance of Terms</h3>
+      <p class="text-dark-secondary mb-4">
+        By accessing and using TransAI's Excel data transformation service ("Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use the Service.
+      </p>
+
+      <h3 class="text-lg font-semibold text-dark-primary mt-6 mb-3">2. Description of Service</h3>
+      <p class="text-dark-secondary mb-4">
+        TransAI provides an automated Excel data transformation service that allows users to upload, transform, and download Excel files. The Service includes features such as data format conversion, formula application, and HTS code verification.
+      </p>
+
+      <h3 class="text-lg font-semibold text-dark-primary mt-6 mb-3">3. User Accounts</h3>
+      <p class="text-dark-secondary mb-4">
+        You are responsible for maintaining the confidentiality of your account credentials. You agree to notify us immediately of any unauthorized use of your account. TransAI is not liable for any loss or damage arising from your failure to protect your account.
+      </p>
+
+      <h3 class="text-lg font-semibold text-dark-primary mt-6 mb-3">4. Acceptable Use</h3>
+      <p class="text-dark-secondary mb-4">
+        You agree to use the Service only for lawful purposes. You may not use the Service to process malicious data, infringe on intellectual property rights, or violate any applicable laws or regulations.
+      </p>
+
+      <h3 class="text-lg font-semibold text-dark-primary mt-6 mb-3">5. Data Processing</h3>
+      <p class="text-dark-secondary mb-4">
+        You retain ownership of all data you upload to the Service. TransAI processes your data solely for the purpose of providing the transformation services. We do not sell or share your data with third parties except as required by law.
+      </p>
+
+      <h3 class="text-lg font-semibold text-dark-primary mt-6 mb-3">6. Subscription and Payments</h3>
+      <p class="text-dark-secondary mb-4">
+        Paid subscriptions are billed on a monthly or yearly basis. All fees are non-refundable except as provided in our Refund Policy. You may cancel your subscription at any time through your account settings.
+      </p>
+
+      <h3 class="text-lg font-semibold text-dark-primary mt-6 mb-3">7. Limitation of Liability</h3>
+      <p class="text-dark-secondary mb-4">
+        TransAI is provided "as is" without warranties of any kind. We are not liable for any indirect, incidental, or consequential damages arising from your use of the Service. Our total liability shall not exceed the amount paid by you in the twelve months preceding the claim.
+      </p>
+
+      <h3 class="text-lg font-semibold text-dark-primary mt-6 mb-3">8. Modifications</h3>
+      <p class="text-dark-secondary mb-4">
+        We reserve the right to modify these Terms at any time. We will notify you of material changes via email or through the Service. Continued use of the Service after modifications constitutes acceptance of the updated Terms.
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<footer class="footer bg-secondary border-t border-dark" style="background-color: #1e293b;">
+  <div class="container mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <!-- Brand Column -->
+      <div class="col-span-1 md:col-span-2">
+        <div class="flex items-center gap-2 mb-4">
+          <img src="../img/transai1.png" alt="TransAI" class="h-8 w-auto">
+          <span class="text-xl font-bold footer-brand-name">TransAI</span>
+        </div>
+        <p class="text-dark-secondary text-sm mb-4 max-w-md">
+          Transform your Excel files with custom column mappings, data processing rules, and HTS code verification.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="text-dark-primary font-semibold mb-4">Quick Links</h3>
+        <ul class="space-y-2">
+          <li><a href="../index.html" class="text-dark-secondary hover:text-dark-primary text-sm transition-colors">Home</a></li>
+          <li><a href="../pricing/index.html" class="text-dark-secondary hover:text-dark-primary text-sm transition-colors">Pricing</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Us -->
+      <div>
+        <h3 class="text-dark-primary font-semibold mb-4">Contact Us</h3>
+        <ul class="space-y-2">
+          <li class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-dark-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <a href="mailto:jasondu8622@gmail.com" class="text-dark-secondary hover:text-dark-primary text-sm transition-colors">jasondu8622@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="border-t border-dark mt-8 pt-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-dark-muted text-sm">© 2026 TransAI. All rights reserved.</p>
+        <div class="flex gap-6">
+          <a href="../privacy/index.html" class="text-dark-muted hover:text-dark-secondary text-sm transition-colors">Privacy Policy</a>
+          <a href="../terms/index.html" class="text-dark-muted hover:text-dark-secondary text-sm transition-colors">Terms of Service</a>
+          <a href="../refund/index.html" class="text-dark-muted hover:text-dark-secondary text-sm transition-colors">Refund Policy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>

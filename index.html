@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Transform your Excel files with custom column mappings, data processing rules, and HTS code verification.">
+  <title>TransAI - Excel Data Transformation</title>
+
+  <!-- Google Fonts - Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Element Plus CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.5.3/dist/index.css">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'dark-primary': '#f1f5f9',
+            'dark-secondary': '#94a3b8',
+            'dark-muted': '#64748b',
+            'dark': '#1e293b',
+            'dark-bg': '#0f172a',
+            'bg-primary': '#0f172a',
+            'bg-secondary': '#1e293b',
+            'bg-tertiary': '#334155',
+            'accent-primary': '#3b82f6',
+            'accent-danger': '#ef4444',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom styles -->
+  <style>
+    :root {
+      /* Background colors */
+      --color-bg-primary: #0f172a;
+      --color-bg-secondary: #1e293b;
+      --color-bg-tertiary: #334155;
+      --color-bg-hover: #475569;
+
+      /* Text colors */
+      --color-text-primary: #f1f5f9;
+      --color-text-secondary: #94a3b8;
+      --color-text-muted: #64748b;
+
+      /* Accent colors */
+      --color-accent-primary: #3b82f6;
+      --color-accent-success: #22c55e;
+      --color-accent-warning: #f59e0b;
+      --color-accent-danger: #ef4444;
+
+      /* Border colors */
+      --color-border-default: #334155;
+      --color-border-light: #475569;
+      --color-border: #334155;
+    }
+
+    html, body {
+      background-color: #0f172a !important;
+      color: #f1f5f9;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1280px;
+    }
+
+    /* Dark theme overrides for Element Plus */
+    .el-card {
+      background-color: var(--color-bg-secondary) !important;
+      border-color: var(--color-border) !important;
+    }
+
+    .el-button--primary {
+      background-color: var(--color-accent-primary) !important;
+      border-color: var(--color-accent-primary) !important;
+    }
+
+    .el-switch.is-checked .el-switch__core {
+      background-color: var(--color-accent-primary) !important;
+      border-color: var(--color-accent-primary) !important;
+    }
+
+    /* Hero brand styles */
+    .hero-brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.875rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-brand-logo {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .hero-brand-name {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+
+    @media (max-width: 640px) {
+      .hero-brand-logo {
+        width: 45px;
+        height: 45px;
+      }
+      .hero-brand-name {
+        font-size: 1.875rem;
+      }
+    }
+
+    /* Dark card styles */
+    .dark-card {
+      background-color: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .dark-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Example card styles */
+    .example-card {
+      background-color: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .example-card:hover {
+      border-color: var(--color-accent-primary);
+    }
+
+    /* Testimonial card styles */
+    .testimonial-card {
+      background-color: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+    }
+
+    /* Upload dragger styles */
+    .upload-dragger {
+      background-color: var(--color-bg-tertiary);
+      border: 2px dashed var(--color-border-default);
+      border-radius: 8px;
+      padding: 2rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .upload-dragger:hover {
+      border-color: var(--color-accent-primary);
+    }
+
+    /* FAQ accordion styles */
+    .faq-item {
+      background-color: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      overflow: hidden;
+    }
+
+    .faq-item summary {
+      padding: 1rem;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-item summary::after {
+      content: '+';
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+    }
+
+    .faq-item[open] summary::after {
+      content: '−';
+    }
+
+    .faq-item .faq-answer {
+      padding: 0 1rem 1rem 1rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Navbar styles */
+    .nav-link {
+      color: var(--color-text-secondary);
+      transition: color 0.2s, border-color 0.2s, transform 0.2s ease;
+      padding-bottom: 4px;
+      border-bottom: 2px solid transparent;
+    }
+
+    .nav-link:hover {
+      color: var(--color-text-primary);
+      transform: scale(1.05);
+    }
+
+    .nav-link-active {
+      color: #3B82F6;
+      font-weight: 600;
+      border-bottom-color: #3B82F6;
+    }
+
+    /* Logo hover effects */
+    .logo-link {
+      transition: transform 0.2s ease;
+    }
+
+    .logo-link:hover {
+      transform: scale(1.05);
+    }
+
+    .logo-text {
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Footer brand name */
+    .footer-brand-name {
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Feature highlight icon filter */
+    .highlight-icon img {
+      filter: brightness(0) saturate(100%) invert(70%) sepia(98%) saturate(2645%) hue-rotate(195deg) brightness(103%) contrast(101%);
+    }
+  </style>
+</head>
+<body>
+
+
+<header class="navbar sticky top-0 z-50 bg-primary/95 backdrop-blur border-b border-dark" style="background-color: rgba(15, 23, 42, 0.95);">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center h-12">
+      <!-- Logo with icon and text -->
+      <a href="./index.html" class="flex items-center gap-2 logo-link">
+        <img src="./img/transai1.png" alt="TransAI" class="h-10 w-auto">
+        <span class="text-3xl font-semibold logo-text">TransAI</span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="./index.html" class="nav-link nav-link-active">Home</a>
+        <a href="./pricing/index.html" class="nav-link ">Pricing</a>
+      </nav>
+
+      <!-- Auth Section -->
+      <div class="hidden md:flex items-center gap-4">
+        <a href="./index.html">
+          <button class="px-4 py-2 bg-accent-primary text-white rounded-md hover:opacity-90 transition-opacity">Get Started</button>
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button class="md:hidden p-2 text-dark-secondary hover:text-dark-primary" onclick="document.getElementById('mobileMenu').classList.toggle('hidden')">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden py-4 border-t border-dark">
+      <nav class="flex flex-col gap-4">
+        <a href="./index.html" class="nav-link nav-link-active">Home</a>
+        <a href="./pricing/index.html" class="nav-link ">Pricing</a>
+        <a href="./index.html" class="mt-2">
+          <button class="px-4 py-2 bg-accent-primary text-white rounded-md hover:opacity-90 transition-opacity">Get Started</button>
+        </a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+
+<div class="home-page">
+  <!-- Hero Section -->
+  <section class="hero-section py-4 lg:py-6" style="background: linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);">
+    <div class="container mx-auto px-4">
+      <!-- Brand Logo and Name -->
+      <div class="flex flex-col items-center justify-center mb-3">
+        <div class="hero-brand">
+          <img src="./img/transai1.png" alt="TransAI Logo" class="hero-brand-logo" />
+          <span class="hero-brand-name">TransAI</span>
+        </div>
+      </div>
+
+      <!-- Main Title -->
+      <div class="text-center mb-6">
+        <h1 class="text-3xl lg:text-4xl font-bold text-dark-primary mb-2">
+          Excel Data Transformation Made Simple
+        </h1>
+        <p class="text-lg lg:text-xl text-dark-secondary max-w-3xl mx-auto">
+          Transform your Excel files with custom column mappings, data processing rules, and HTS code verification.
+        </p>
+      </div>
+
+      <!-- Selling Points Grid -->
+      <div class="mb-6">
+        <div class="feature-highlights grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          <div class="dark-card p-4 lg:p-6 text-center highlight-icon">
+            <img src="./img/free-tier.svg" alt="Free Tier" class="w-8 h-8 mx-auto mb-3" />
+            <h3 class="text-lg font-semibold text-dark-primary mb-1">Free Tier</h3>
+            <p class="text-sm text-dark-secondary">100 rows per file, 5 files/month</p>
+          </div>
+          <div class="dark-card p-4 lg:p-6 text-center highlight-icon">
+            <img src="./img/no-credit-card.svg" alt="No Credit Card" class="w-8 h-8 mx-auto mb-3" />
+            <h3 class="text-lg font-semibold text-dark-primary mb-1">No Credit Card</h3>
+            <p class="text-sm text-dark-secondary">Start using immediately</p>
+          </div>
+          <div class="dark-card p-4 lg:p-6 text-center highlight-icon">
+            <img src="./img/instant-processing.svg" alt="Instant Processing" class="w-8 h-8 mx-auto mb-3" />
+            <h3 class="text-lg font-semibold text-dark-primary mb-1">Instant Processing</h3>
+            <p class="text-sm text-dark-secondary">Results in seconds</p>
+          </div>
+          <div class="dark-card p-4 lg:p-6 text-center highlight-icon">
+            <img src="./img/data-security.svg" alt="Data Security" class="w-8 h-8 mx-auto mb-3" />
+            <h3 class="text-lg font-semibold text-dark-primary mb-1">Data Security</h3>
+            <p class="text-sm text-dark-secondary">Your data stays private</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Upload Mockup -->
+      <div class="max-w-2xl mx-auto">
+        <div class="dark-card p-6">
+          <div class="text-center mb-4">
+            <h2 class="text-xl font-semibold text-dark-primary mb-2">Quick Upload</h2>
+            <p class="text-dark-secondary text-sm">Upload your Excel file to get started</p>
+          </div>
+          <div class="upload-dragger text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-accent-primary mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+            <p class="text-dark-secondary">
+              Drop file here or <em class="text-accent-primary">click to upload</em>
+            </p>
+            <p class="text-dark-muted text-center text-sm mt-2">
+              Supports .xlsx, .xls, .csv files (max 10MB)
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Get Inspired Section -->
+  <section id="inspired" class="py-8 lg:py-12 bg-secondary">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-dark-primary text-center mb-4">Get Inspired</h2>
+      <p class="text-dark-secondary text-center mb-12 max-w-2xl mx-auto">
+        Explore these example transformation scenarios to see what's possible
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="example-card dark-card p-6 cursor-pointer">
+          <h3 class="text-lg font-semibold text-dark-primary mb-2">Product Price Formatting</h3>
+          <p class="text-dark-secondary text-sm mb-4">Round prices to 2 decimal places and add currency symbol</p>
+          <div class="bg-tertiary rounded-lg p-3 text-xs" style="background-color: var(--color-bg-tertiary);">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-dark-muted">Before:</span>
+              <span class="text-dark-secondary truncate">price: 123.4567</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-accent-success">After:</span>
+              <span class="text-dark-primary truncate">Price: $123.46</span>
+            </div>
+          </div>
+        </div>
+        <div class="example-card dark-card p-6 cursor-pointer">
+          <h3 class="text-lg font-semibold text-dark-primary mb-2">Customer Name Cleanup</h3>
+          <p class="text-dark-secondary text-sm mb-4">Trim whitespace and standardize name format</p>
+          <div class="bg-tertiary rounded-lg p-3 text-xs" style="background-color: var(--color-bg-tertiary);">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-dark-muted">Before:</span>
+              <span class="text-dark-secondary truncate">name: "  John Doe  "</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-accent-success">After:</span>
+              <span class="text-dark-primary truncate">Name: "John Doe"</span>
+            </div>
+          </div>
+        </div>
+        <div class="example-card dark-card p-6 cursor-pointer">
+          <h3 class="text-lg font-semibold text-dark-primary mb-2">Date Format Conversion</h3>
+          <p class="text-dark-secondary text-sm mb-4">Convert date formats for international compatibility</p>
+          <div class="bg-tertiary rounded-lg p-3 text-xs" style="background-color: var(--color-bg-tertiary);">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-dark-muted">Before:</span>
+              <span class="text-dark-secondary truncate">date: 2024-01-15</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-accent-success">After:</span>
+              <span class="text-dark-primary truncate">Date: 01/15/2024</span>
+            </div>
+          </div>
+        </div>
+        <div class="example-card dark-card p-6 cursor-pointer">
+          <h3 class="text-lg font-semibold text-dark-primary mb-2">Product Category Mapping</h3>
+          <p class="text-dark-secondary text-sm mb-4">Map product codes to readable category names</p>
+          <div class="bg-tertiary rounded-lg p-3 text-xs" style="background-color: var(--color-bg-tertiary);">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-dark-muted">Before:</span>
+              <span class="text-dark-secondary truncate">cat: ELEC-001</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-accent-success">After:</span>
+              <span class="text-dark-primary truncate">Category: Electronics</span>
+            </div>
+          </div>
+        </div>
+        <div class="example-card dark-card p-6 cursor-pointer">
+          <h3 class="text-lg font-semibold text-dark-primary mb-2">Address Standardization</h3>
+          <p class="text-dark-secondary text-sm mb-4">Format addresses with proper capitalization</p>
+          <div class="bg-tertiary rounded-lg p-3 text-xs" style="background-color: var(--color-bg-tertiary);">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-dark-muted">Before:</span>
+              <span class="text-dark-secondary truncate">addr: 123 main st</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-accent-success">After:</span>
+              <span class="text-dark-primary truncate">Address: 123 Main St</span>
+            </div>
+          </div>
+        </div>
+        <div class="example-card dark-card p-6 cursor-pointer">
+          <h3 class="text-lg font-semibold text-dark-primary mb-2">HTS Code Verification</h3>
+          <p class="text-dark-secondary text-sm mb-4">Verify and validate HTS codes against customs data</p>
+          <div class="bg-tertiary rounded-lg p-3 text-xs" style="background-color: var(--color-bg-tertiary);">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-dark-muted">Before:</span>
+              <span class="text-dark-secondary truncate">hts: 8471.30.01</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-accent-success">After:</span>
+              <span class="text-dark-primary truncate">HTS: ✓ Valid - Computers</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Features Section -->
+  <section id="features" class="py-16 lg:py-24">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-dark-primary text-center mb-4">Key Features</h2>
+      <p class="text-dark-secondary text-center mb-12 max-w-2xl mx-auto">
+        Everything you need to transform your Excel data efficiently
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="dark-card p-6">
+          <div class="text-accent-primary mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-dark-primary mb-2">Column Mapping</h3>
+          <p class="text-dark-secondary">Map source columns to target columns with custom names and flexible ordering.</p>
+        </div>
+        <div class="dark-card p-6">
+          <div class="text-accent-primary mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-dark-primary mb-2">Data Processing</h3>
+          <p class="text-dark-secondary">Apply formulas like ROUND, TRIM, and custom transformations to your data.</p>
+        </div>
+        <div class="dark-card p-6">
+          <div class="text-accent-primary mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-dark-primary mb-2">HTS Verification</h3>
+          <p class="text-dark-secondary">Verify HTS codes against official US Customs data with AI-powered matching.</p>
+        </div>
+        <div class="dark-card p-6">
+          <div class="text-accent-primary mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-dark-primary mb-2">Template Save</h3>
+          <p class="text-dark-secondary">Save and reuse your transformation configurations for future projects.</p>
+        </div>
+        <div class="dark-card p-6">
+          <div class="text-accent-primary mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-dark-primary mb-2">Batch Processing</h3>
+          <p class="text-dark-secondary">Process multiple files at once with saved templates and automation.</p>
+        </div>
+        <div class="dark-card p-6">
+          <div class="text-accent-primary mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-dark-primary mb-2">Data Security</h3>
+          <p class="text-dark-secondary">Your files are processed securely and not stored on our servers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof Section -->
+  <section id="trust" class="py-16 lg:py-24 bg-secondary">
+    <div class="container mx-auto px-4">
+      <!-- User Statistics -->
+      <div class="text-center mb-12">
+        <div class="flex flex-wrap justify-center gap-8 lg:gap-16">
+          <div class="stat-item">
+            <div class="text-4xl lg:text-5xl font-bold text-accent-primary mb-2">5K+</div>
+            <div class="text-dark-secondary">Users Worldwide</div>
+          </div>
+          <div class="stat-item">
+            <div class="text-4xl lg:text-5xl font-bold text-accent-primary mb-2">50K+</div>
+            <div class="text-dark-secondary">Files Processed</div>
+          </div>
+          <div class="stat-item">
+            <div class="text-4xl lg:text-5xl font-bold text-accent-primary mb-2">99.9%</div>
+            <div class="text-dark-secondary">Uptime</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonials -->
+      <div class="text-center mb-8">
+        <h2 class="text-2xl font-bold text-dark-primary mb-2">Trusted by Professionals</h2>
+        <p class="text-dark-secondary">See what our users are saying</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="testimonial-card p-6">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-12 h-12 rounded-full bg-accent-primary flex items-center justify-center text-white font-bold">JD</div>
+            <div>
+              <div class="font-semibold text-dark-primary">John Davis</div>
+              <div class="text-dark-muted text-sm">Supply Chain Manager</div>
+            </div>
+          </div>
+          <p class="text-dark-secondary text-sm leading-relaxed">"This tool has saved us countless hours on data transformation tasks. The HTS verification feature is a game-changer."</p>
+          <div class="mt-3 flex gap-1" style="color: var(--color-accent-warning);">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          </div>
+        </div>
+        <div class="testimonial-card p-6">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-12 h-12 rounded-full bg-accent-primary flex items-center justify-center text-white font-bold">SM</div>
+            <div>
+              <div class="font-semibold text-dark-primary">Sarah Miller</div>
+              <div class="text-dark-muted text-sm">Import Specialist</div>
+            </div>
+          </div>
+          <p class="text-dark-secondary text-sm leading-relaxed">"The column mapping feature is incredibly intuitive. I was able to set up complex transformations in minutes."</p>
+          <div class="mt-3 flex gap-1" style="color: var(--color-accent-warning);">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          </div>
+        </div>
+        <div class="testimonial-card p-6">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-12 h-12 rounded-full bg-accent-primary flex items-center justify-center text-white font-bold">RK</div>
+            <div>
+              <div class="font-semibold text-dark-primary">Robert Kim</div>
+              <div class="text-dark-muted text-sm">Operations Director</div>
+            </div>
+          </div>
+          <p class="text-dark-secondary text-sm leading-relaxed">"We process thousands of files monthly. The batch processing with templates has transformed our workflow."</p>
+          <div class="mt-3 flex gap-1" style="color: var(--color-accent-warning);">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="py-16 lg:py-24">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-dark-primary text-center mb-4">
+        Frequently Asked Questions
+      </h2>
+      <p class="text-dark-secondary text-center mb-12 max-w-2xl mx-auto">
+        Find answers to common questions about our service
+      </p>
+      <div class="max-w-3xl mx-auto">
+        <details class="faq-item">
+          <summary>What file formats are supported?</summary>
+          <div class="faq-answer">We support Excel files (.xlsx, .xls) and CSV files. The maximum file size depends on your subscription tier, ranging from 100 rows (Free) to 5,000 rows (Premium).</div>
+        </details>
+        <details class="faq-item">
+          <summary>How does HTS code verification work?</summary>
+          <div class="faq-answer">Our system uses a combination of exact matching and AI-powered semantic matching to verify HTS codes against official US Customs data. This ensures high accuracy even when product descriptions vary.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Is my data secure?</summary>
+          <div class="faq-answer">Yes, your files are processed securely and are not stored on our servers after processing. We use industry-standard encryption for data in transit. Your data privacy is our top priority.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Can I cancel my subscription anytime?</summary>
+          <div class="faq-answer">Yes, you can cancel your subscription at any time. Your access will continue until the end of the current billing period. No questions asked, no hidden fees.</div>
+        </details>
+        <details class="faq-item">
+          <summary>What formulas are available for data processing?</summary>
+          <div class="faq-answer">We support common Excel formulas including ROUND, TRIM, UPPER, LOWER, PROPER, CONCATENATE, and custom expressions. You can also create compound formulas for complex transformations.</div>
+        </details>
+        <details class="faq-item">
+          <summary>How do I save and reuse transformation templates?</summary>
+          <div class="faq-answer">After creating a transformation configuration, click "Save as Template" to store it. You can access your saved templates from the Templates page and apply them to new files with one click.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+<footer class="footer bg-secondary border-t border-dark" style="background-color: #1e293b;">
+  <div class="container mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <!-- Brand Column -->
+      <div class="col-span-1 md:col-span-2">
+        <div class="flex items-center gap-2 mb-4">
+          <img src="./img/transai1.png" alt="TransAI" class="h-8 w-auto">
+          <span class="text-xl font-bold footer-brand-name">TransAI</span>
+        </div>
+        <p class="text-dark-secondary text-sm mb-4 max-w-md">
+          Transform your Excel files with custom column mappings, data processing rules, and HTS code verification.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="text-dark-primary font-semibold mb-4">Quick Links</h3>
+        <ul class="space-y-2">
+          <li><a href="./index.html" class="text-dark-secondary hover:text-dark-primary text-sm transition-colors">Home</a></li>
+          <li><a href="./pricing/index.html" class="text-dark-secondary hover:text-dark-primary text-sm transition-colors">Pricing</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Us -->
+      <div>
+        <h3 class="text-dark-primary font-semibold mb-4">Contact Us</h3>
+        <ul class="space-y-2">
+          <li class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-dark-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <a href="mailto:jasondu8622@gmail.com" class="text-dark-secondary hover:text-dark-primary text-sm transition-colors">jasondu8622@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="border-t border-dark mt-8 pt-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-dark-muted text-sm">© 2026 TransAI. All rights reserved.</p>
+        <div class="flex gap-6">
+          <a href="./privacy/index.html" class="text-dark-muted hover:text-dark-secondary text-sm transition-colors">Privacy Policy</a>
+          <a href="./terms/index.html" class="text-dark-muted hover:text-dark-secondary text-sm transition-colors">Terms of Service</a>
+          <a href="./refund/index.html" class="text-dark-muted hover:text-dark-secondary text-sm transition-colors">Refund Policy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>
